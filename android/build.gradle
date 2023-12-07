@@ -8,6 +8,10 @@ buildscript {
         kotlinVersion = "1.8.0"
     }
     repositories {
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            allowInsecureProtocol = true
+        }
         google()
         mavenCentral()
     }

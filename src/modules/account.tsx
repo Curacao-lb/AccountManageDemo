@@ -9,20 +9,25 @@ import {
   Platform,
   TextInput
 } from 'react-native'
+import { load, save } from '../utils/storage'
+
 
 import icon_close_modal from '../assets/icon_close_modal.png'
 import { forwardRef, useImperativeHandle, useState } from 'react'
+import { getUUID } from '../utils/UUID';
 
 
-export default forwardRef((props, ref): any => {
+export default forwardRef(({ onSave }: any, ref): any => {
 
   const [visible, setVisible] = useState(false)
   const [type, setType] = useState('Game')
   const [name, setName] = useState('')
-
   const [account, setAccount] = useState('')
-
   const [password, setPassword] = useState('')
+  const [isModify, setIdModify] = useState(false);
+  const [id, setId] = useState('');
+
+
 
   useImperativeHandle(ref, () => {
     return {
@@ -31,8 +36,24 @@ export default forwardRef((props, ref): any => {
     }
   })
 
-  function show() {
+  function show(currentAccount: any) {
     setVisible(true)
+
+    if (currentAccount) {
+      setIdModify(true);
+      setId(currentAccount.id);
+      setType(currentAccount.type);
+      setName(currentAccount.name);
+      setAccount(currentAccount.account);
+      setPassword(currentAccount.password);
+    } else {
+      setIdModify(false);
+      setId(getUUID());
+      setType('Game');
+      setName('');
+      setAccount('');
+      setPassword('');
+    }
   }
 
   function hide() {
@@ -219,6 +240,24 @@ export default forwardRef((props, ref): any => {
     )
   }
 
+  const onSavePress = () => {
+    const newAccount = { id, type, name, account, password };
+    load('accountList').then(data => {
+      let accountList = data ? JSON.parse(data) : [];
+
+      // 如果是编辑现有账号，则push前先移除原来的
+      if (isModify) {
+        accountList = accountList.filter((item: any) => item.id !== id);
+      }
+
+      accountList.push(newAccount);
+      save('accountList', JSON.stringify(accountList)).then(() => {
+        onSave();
+        hide();
+      });
+    })
+  }
+
   const renderButton = () => {
     const styles = StyleSheet.create({
       saveButton: {
@@ -240,7 +279,7 @@ export default forwardRef((props, ref): any => {
     return (
       <TouchableOpacity
         style={styles.saveButton}
-      // onPress={onSavePress}
+        onPress={onSavePress}
       >
         <Text style={styles.saveTxt}>SAVE</Text>
       </TouchableOpacity>

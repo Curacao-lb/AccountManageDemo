@@ -94,10 +94,6 @@ export default () => {
   }
 
   const renderItem = ({ item, index, section }: any) => {
-    console.log('ectionState[section.type]', sectionState[section.type]);
-    console.log('item', item);
-
-
     if (!sectionState[section.type]) {
       return null;
     }
@@ -109,16 +105,16 @@ export default () => {
         }}
         onLongPress={() => {
           const buttons = [
-            { text: '取消', onPress: () => { } },
-            { text: '确定', onPress: () => deleteAccount(item) }
+            { text: 'Cancel', onPress: () => { } },
+            { text: 'Affirm', onPress: () => deleteAccount(item) }
           ];
-          Alert.alert('提示', `确定删除「${item.name}」账号吗？`, buttons);
+          Alert.alert('Tips', `Are you sure to delete「${item.name}」?`, buttons);
         }}
       >
         <Text style={styles.nameTxt}>{item.name}</Text>
         <View style={styles.accpwdLayout}>
-          <Text style={styles.accpwdTxt}>{`账号：${item.account}`}</Text>
-          <Text style={styles.accpwdTxt}>{`密码：${passwordOpen ? item.password : '********'}`}</Text>
+          <Text style={styles.accpwdTxt}>{`Account: ${item.account}`}</Text>
+          <Text style={styles.accpwdTxt}>{`Password: ${passwordOpen ? item.password : '********'}`}</Text>
         </View>
       </TouchableOpacity>
     );

@@ -18,7 +18,6 @@ import { getUUID } from '../utils/UUID';
 
 
 export default forwardRef(({ onSave }: any, ref): any => {
-
   const [visible, setVisible] = useState(false)
   const [type, setType] = useState('Game')
   const [name, setName] = useState('')
@@ -26,8 +25,6 @@ export default forwardRef(({ onSave }: any, ref): any => {
   const [password, setPassword] = useState('')
   const [isModify, setIdModify] = useState(false);
   const [id, setId] = useState('');
-
-
 
   useImperativeHandle(ref, () => {
     return {
@@ -85,9 +82,9 @@ export default forwardRef(({ onSave }: any, ref): any => {
     })
     return (
       <View style={styles.titleLayout}>
-        {/* <Text style={styles.titleTxt}>
-          {isModify ? '修改账号' : '添加账号'}
-        </Text> */}
+        <Text style={styles.titleTxt}>
+          {isModify ? 'Modify Account' : 'Add Account'}
+        </Text>
         <Text>Add Account</Text>
         <TouchableOpacity
           style={styles.closeButton}
@@ -245,7 +242,6 @@ export default forwardRef(({ onSave }: any, ref): any => {
     load('accountList').then(data => {
       let accountList = data ? JSON.parse(data) : [];
 
-      // 如果是编辑现有账号，则push前先移除原来的
       if (isModify) {
         accountList = accountList.filter((item: any) => item.id !== id);
       }
